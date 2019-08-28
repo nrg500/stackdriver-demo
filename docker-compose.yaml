@@ -1,0 +1,11 @@
+version: '3'
+services:
+    hotel:
+      build:
+        context: hotel
+      image: berwoutv/hotel:v1
+
+    booking:
+      build:
+        context: booking
+      image: berwoutv/booking:v1
