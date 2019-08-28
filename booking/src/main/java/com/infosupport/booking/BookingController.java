@@ -16,7 +16,7 @@ import java.net.URISyntaxException;
 public class BookingController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    @GetMapping("/booking")
+    @GetMapping("/")
     public String getBooking(HttpServletRequest incomingRequest) throws URISyntaxException, InterruptedException {
         RestTemplate restTemplate = new RestTemplate();
         URI uri = new URI("http://hotel/room");
