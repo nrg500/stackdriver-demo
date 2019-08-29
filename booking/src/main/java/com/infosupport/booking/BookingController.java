@@ -28,6 +28,7 @@ public class BookingController {
             ResponseEntity<String> hotelRoom = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
             if(hotelRoom.getStatusCode() == HttpStatus.OK){
                 result = "Congratulations, we found you a room ! :" + hotelRoom.getBody();
+                log.info("Room found " + hotelRoom.getBody());
             } else {
                 result = "Sorry, we could not find you a room.";
             }

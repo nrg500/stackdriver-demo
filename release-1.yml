@@ -39,7 +39,7 @@ spec:
         app: booking
     spec:
       containers:
-        - name: server
+        - name: booking
           image: berwoutv/booking:v1
           ports:
             - containerPort: 8080
@@ -71,7 +71,7 @@ spec:
         app: hotel
     spec:
       containers:
-        - name: server
+        - name: hotel
           image: berwoutv/hotel:v1
           ports:
             - containerPort: 8080
