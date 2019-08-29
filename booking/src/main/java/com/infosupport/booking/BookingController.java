@@ -1,5 +1,7 @@
 package com.infosupport.booking;
 
+import io.opencensus.common.Scope;
+import io.opencensus.trace.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.*;
@@ -15,27 +17,23 @@ import java.net.URISyntaxException;
 @RestController
 public class BookingController {
     private final Log log = LogFactory.getLog(getClass());
+    private static final Tracer tracer = Tracing.getTracer();
 
     @GetMapping("/")
     public String getBooking(HttpServletRequest incomingRequest) throws URISyntaxException, InterruptedException {
-        RestTemplate restTemplate = new RestTemplate();
-        URI uri = new URI("http://hotel/room");
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity<String> request = new HttpEntity<String>(headers);
+        Span span = SpanUtils.buildSpan(tracer, "BookingController getBooking").startSpan();
+        String url = "http://hotel/room";
+        String result;
         Thread.sleep(100 + (int)Math.random()*200);
-        String result = "Sorry, we could not find you any hotel rooms.";
-        try {
-            ResponseEntity<String> hotelRoom = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
-            if(hotelRoom.getStatusCode() == HttpStatus.OK){
-                result = "Congratulations, we found you a room ! :" + hotelRoom.getBody();
-                log.info("Room found " + hotelRoom.getBody());
-            } else {
-                result = "Sorry, we could not find you a room.";
-            }
-        } catch (RestClientException e) {
-            log.error("Could not contact hotelservice. Exception: ", e);
+        try (Scope ws = tracer.withSpan(span)) {
+            result = "Congratulations, we found you a room!"+ HttpUtils.callEndpoint(url, HttpMethod.GET);
+        } catch (Exception e) {
+            span.setStatus(Status.ABORTED);
+            span.addAnnotation("Error while calling service");
+            log.error("Error while calling service: {}" +  e.getMessage());
+            result = "Sorry, we could not find you any hotel rooms.";
         }
-        
+        span.end();
         return result;
     }
 }

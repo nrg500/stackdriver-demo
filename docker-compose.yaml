@@ -3,9 +3,9 @@ services:
     hotel:
       build:
         context: hotel
-      image: berwoutv/hotel:metrics
+      image: berwoutv/hotel:tracing
 
     booking:
       build:
         context: booking
-      image: berwoutv/booking:metrics
+      image: berwoutv/booking:tracing
