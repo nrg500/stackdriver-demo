@@ -2,7 +2,7 @@ FROM maven:slim as builder
 WORKDIR /app
 
 COPY . .
-RUN mvn clean install
+RUN mvn clean -DskipTests install
 
 FROM openjdk:8-slim 
 
